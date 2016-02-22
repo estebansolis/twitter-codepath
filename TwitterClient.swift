@@ -37,6 +37,24 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func retweet(tweetID: String,params: NSDictionary?, completion: (response: NSDictionary?,error: NSError?) -> ()){
+        TwitterClient.sharedInstance.POST("1.1/statuses/retweet/\(tweetID).json", parameters: params, success: { (operation: NSURLSessionDataTask!, response: AnyObject?) -> Void in
+            completion(response: response as? NSDictionary,error: nil)
+            })
+            { (operation: NSURLSessionDataTask?, error:NSError) -> Void in
+                completion(response: nil,error: error)
+        }
+    }
+    
+    func like(tweetID: String,params: NSDictionary?, completion: (response: NSDictionary?,error: NSError?) -> ()){
+        TwitterClient.sharedInstance.POST("https://api.twitter.com/1.1/favorites/create.json?id=\(tweetID)", parameters: params, success: { (operation: NSURLSessionDataTask!, response: AnyObject?) -> Void in
+            completion(response: response as? NSDictionary,error: nil)
+            })
+            { (operation: NSURLSessionDataTask?, error:NSError) -> Void in
+                completion(response: nil,error: error)
+        }
+    }
+    
     func loginWithCompletion(completion: (user: User?, error: NSError?) -> ()){
         loginCompletion = completion
         
