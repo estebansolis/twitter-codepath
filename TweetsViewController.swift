@@ -14,18 +14,16 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
 
     @IBOutlet weak var tableView: UITableView!
     
-    @IBAction func onLogout(sender: AnyObject) {
-        User.currentUser?.logout()
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+                
         tableView.dataSource = self
         tableView.delegate = self
         
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 160
-        
+        tableView.estimatedRowHeight = 170
+       
         TwitterClient.sharedInstance.homeTimelineWithParams(nil, completion: { (tweets, error) ->() in
             self.tweets = tweets
             self.tableView.reloadData()
@@ -35,25 +33,31 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         // Do any additional setup after loading the view.
     }
 
+    @IBAction func onLogOut(sender: AnyObject) {
+        User.currentUser?.logout()
+
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+    override func viewDidAppear(animated: Bool) {
+        self.tableView.reloadData()
+    }
    
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell",forIndexPath: indexPath) as! TweetsCell
         cell.textLabel!.text = "row \(indexPath.row)"
+        
         let tweet = self.tweets![indexPath.row]
         let profileImageURL = NSURL(string: (tweet.user?.profileImageUrl)!)
         cell.profileImage.setImageWithURL(profileImageURL!)
-        cell.profileImage.layer.cornerRadius = 8.0
-        cell.profileImage.clipsToBounds = true
+       
         cell.tweet = tweet
         cell.usernameLabel.text = tweet.user?.name
-        print(cell.usernameLabel.text)
-        cell.handlenameLabel.text = tweet.user?.screenName
+       // print(cell.usernameLabel.text)
+        cell.handlenameLabel.text = "@" + (tweet.user?.screenName)!
         cell.textLabel!.text = tweet.text
         cell.timeLabel.text = tweet.createdAtString
         cell.retweetLabel.text = String(tweet.retweetCount!)
@@ -75,10 +79,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             cell.likeImageView.highlighted = true
         }
         
-        
-        
-        
-        
+      
         
         return cell
     }

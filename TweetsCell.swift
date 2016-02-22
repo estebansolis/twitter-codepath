@@ -25,9 +25,20 @@ class TweetsCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        usernameLabel.sizeToFit()
+      //  handlenameLabel.sizeToFit()
         // Initialization code
-    }
+        profileImage.layer.cornerRadius = 8.0
+        profileImage.clipsToBounds = true
+        tweetTextLabel.preferredMaxLayoutWidth = tweetTextLabel.frame.size.width
 
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        tweetTextLabel.preferredMaxLayoutWidth = tweetTextLabel.frame.size.width
+    }
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
